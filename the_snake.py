@@ -91,6 +91,7 @@ class Snake(GameObject):
         self.direction = RIGHT
         self.next_direction = None
         self.positions = [self.position]
+        self.last = self.positions[-1]
 
     def draw(self, surface):
         """Отрисовывает змейку на экране"""
@@ -125,6 +126,7 @@ class Snake(GameObject):
             new_position = (head[0] + self.direction[0] * GRID_SIZE, 460)
 
         self.positions.insert(0, new_position)
+        self.last = self.positions[-1]
         self.positions.pop()
 
         if self.positions[0] in self.positions[1:]:
@@ -167,6 +169,7 @@ def main():
 
     while True:
         screen.fill((0, 0, 0))
+        print(snake.positions, snake.last)
         clock.tick(SPEED)
         handle_keys(snake)
         snake.update_direction()
