@@ -77,9 +77,10 @@ class Apple(GameObject):
         Создаётся внутри конструктора, значение по умолчанию - APPLE_COLOR.
     """
 
-    def __init__(self, body_color=APPLE_COLOR):
+    def __init__(self, gameobject=(), body_color=APPLE_COLOR):
         """Инициализация Яблока."""
         super().__init__(body_color)
+        self.randomize_position(gameobject)
 
     def randomize_position(self, gameobject):
         """Задаёт случайные координаты Яблока.
@@ -91,9 +92,9 @@ class Apple(GameObject):
             self.position = (randint(0, GRID_WIDTH - 1) * GRID_SIZE,
                              randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
 
-            if self.position in gameobject.positions:
+            if self.position in gameobject:
                 continue
-            if self.position not in gameobject.positions:
+            if self.position not in gameobject:
                 return
 
 
@@ -211,9 +212,8 @@ def main():
 
     screen.fill(BOARD_BACKGROUND_COLOR)
 
-    apple = Apple()
     snake = Snake()
-    apple.randomize_position(snake)
+    apple = Apple(snake.positions)
     apple.draw(screen, apple.position)
 
     while True:
@@ -224,7 +224,7 @@ def main():
         snake.draw(screen)
 
         if snake.get_head_position() == apple.position:
-            apple.randomize_position(snake)
+            apple.randomize_position(snake.positions)
             apple.draw(screen, apple.position)
             snake.length += 1
 
