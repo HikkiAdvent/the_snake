@@ -47,12 +47,12 @@ class GameObject():
         self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
         self.body_color = body_color
 
-    def draw(self, surface):
+    def draw(self, surface, position):
         """Метод отрисовки объекта.
         Внутри класса Gameobject является нерабочим.
         """
         rect = pg.Rect(
-            (self.position[0], self.position[1]),
+            (position[0], position[1]),
             (GRID_SIZE, GRID_SIZE)
         )
         pg.draw.rect(surface, self.body_color, rect)
@@ -142,12 +142,7 @@ class Snake(GameObject):
     def draw(self, surface):
         """Отрисовывает Змейку на экране."""
         head = self.get_head_position()
-        rect = (
-            pg.Rect((head[0], head[1]), (GRID_SIZE, GRID_SIZE))
-        )
-        pg.draw.rect(surface, self.body_color, rect)
-        pg.draw.rect(surface, (93, 216, 228), rect, 1)
-
+        super().draw(surface, head)
         self.last_delete(surface)
 
     def last_delete(self, surface):
@@ -219,7 +214,7 @@ def main():
     apple = Apple()
     snake = Snake()
     apple.randomize_position(snake)
-    apple.draw(screen)
+    apple.draw(screen, apple.position)
 
     while True:
 
@@ -230,13 +225,13 @@ def main():
 
         if snake.get_head_position() == apple.position:
             apple.randomize_position(snake)
-            apple.draw(screen)
+            apple.draw(screen, apple.position)
             snake.length += 1
 
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
-            apple.draw(screen)
+            apple.draw(screen, apple.position)
 
         pg.display.update()
 
