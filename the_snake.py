@@ -168,8 +168,7 @@ class Snake(GameObject):
         Проверяет столкновение Змейки с самой собой и выход за границы экрана.
         """
         head = self.get_head_position()
-        fir_direction = self.direction[0]
-        sec_direction = self.direction[1]
+        fir_direction, sec_direction = self.direction
         new_position = ((head[0] + fir_direction * GRID_SIZE) % SCREEN_WIDTH,
                         (head[1] + sec_direction * GRID_SIZE) % SCREEN_HEIGHT)
 
