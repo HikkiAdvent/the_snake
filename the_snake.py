@@ -21,6 +21,10 @@ BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
 SPEED = 8
 
+clock = pg.time.Clock()
+
+screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+
 
 class GameObject():
     """Родительский класс игровых объектов.
@@ -144,10 +148,12 @@ class Snake(GameObject):
         pg.draw.rect(surface, self.body_color, rect)
         pg.draw.rect(surface, (93, 216, 228), rect, 1)
 
+        self.last_delete(surface)
+
     def last_delete(self, surface):
         """Стирает след Змейки."""
         tail = self.last
-        if len(self.positions) >= self.length:
+        if len(self.positions) > self.length:
             rect = (
                 pg.Rect((tail[0], tail[1]), (GRID_SIZE, GRID_SIZE))
             )
@@ -160,7 +166,7 @@ class Snake(GameObject):
         if next_direction:
             self.direction = next_direction
 
-    def move(self, gameobject, surface):
+    def move(self):
         """Обновляет позицию Змейки, добавляя новую голову в начало списка.
 
         Проверяет столкновение Змейки с самой собой и выход за границы экрана.
@@ -206,34 +212,31 @@ def main():
     """Функция запускает игру."""
     pg.init()
 
-    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
     pg.display.set_caption('Змейка')
-
-    clock = pg.time.Clock()
 
     screen.fill(BOARD_BACKGROUND_COLOR)
 
     apple = Apple()
     snake = Snake()
     apple.randomize_position(snake)
+    apple.draw(screen)
 
     while True:
 
         clock.tick(SPEED)
-        apple.draw(screen)
-        snake.draw(screen)
         handle_keys(snake)
-        snake.move(apple, screen)
+        snake.move()
+        snake.draw(screen)
 
         if snake.get_head_position() == apple.position:
             apple.randomize_position(snake)
-        else:
-            snake.last_delete(screen)
+            apple.draw(screen)
+            snake.length += 1
 
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
+            apple.draw(screen)
 
         pg.display.update()
 
