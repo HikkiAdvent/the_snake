@@ -1,10 +1,7 @@
 from random import randint, choice
 
-
 import pygame as pg
 
-
-pg.init()
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
@@ -22,15 +19,7 @@ direct = [UP, DOWN, LEFT, RIGHT]
 
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
-SPEED = 6
-
-screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
-pg.display.set_caption('Змейка')
-
-clock = pg.time.Clock()
-
-screen.fill(BOARD_BACKGROUND_COLOR)
+SPEED = 8
 
 
 class GameObject():
@@ -100,17 +89,8 @@ class Apple(GameObject):
 
             if self.position in gameobject.positions:
                 continue
-            else:
-                break
-
-    def draw(self, surface):
-        """Метод отрисовки Яблока."""
-        rect = pg.Rect(
-            (self.position[0], self.position[1]),
-            (GRID_SIZE, GRID_SIZE)
-        )
-        pg.draw.rect(surface, self.body_color, rect)
-        pg.draw.rect(surface, (93, 216, 228), rect, 1)
+            if self.position not in gameobject.positions:
+                return
 
 
 class Snake(GameObject):
@@ -224,6 +204,16 @@ def handle_keys(game_object):
 
 def main():
     """Функция запускает игру."""
+    pg.init()
+
+    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+
+    pg.display.set_caption('Змейка')
+
+    clock = pg.time.Clock()
+
+    screen.fill(BOARD_BACKGROUND_COLOR)
+
     apple = Apple()
     snake = Snake()
     apple.randomize_position(snake)
