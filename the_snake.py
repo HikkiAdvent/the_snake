@@ -149,13 +149,11 @@ class Snake(GameObject):
     def last_delete(self, surface):
         """Стирает след Змейки."""
         tail = self.last
-        if len(self.positions) > self.length:
-            rect = (
-                pg.Rect((tail[0], tail[1]), (GRID_SIZE, GRID_SIZE))
-            )
-            pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect)
-            pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect, 1)
-            self.last = self.positions.pop()
+        rect = (
+            pg.Rect((tail[0], tail[1]), (GRID_SIZE, GRID_SIZE))
+        )
+        pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect)
+        pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect, 1)
 
     def update_direction(self, next_direction=None):
         """Метод обновления направления Змейки после нажатия на кнопку."""
@@ -173,6 +171,8 @@ class Snake(GameObject):
                         (head[1] + sec_direction * GRID_SIZE) % SCREEN_HEIGHT)
 
         self.positions.insert(0, new_position)
+        if len(self.positions) > self.length:
+            self.last = self.positions.pop()
 
     def get_head_position(self):
         """Возвращает положение головы."""
