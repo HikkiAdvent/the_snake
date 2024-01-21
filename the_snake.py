@@ -94,8 +94,7 @@ class Apple(GameObject):
 
             if self.position in gameobject:
                 continue
-            if self.position not in gameobject:
-                return
+            return
 
 
 class Snake(GameObject):
@@ -140,20 +139,19 @@ class Snake(GameObject):
         super().__init__(body_color)
         self.reset()
 
-    def draw(self, surface):
+    def draw(self, surface, color):
         """Отрисовывает Змейку на экране."""
         head = self.get_head_position()
         super().draw(surface, head)
-        self.last_delete(surface)
+        self.last_delete(surface, color)
 
-    def last_delete(self, surface):
+    def last_delete(self, surface, color):
         """Стирает след Змейки."""
-        tail = self.last
         rect = (
-            pg.Rect((tail[0], tail[1]), (GRID_SIZE, GRID_SIZE))
+            pg.Rect((self.last[0], self.last[1]), (GRID_SIZE, GRID_SIZE))
         )
-        pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect)
-        pg.draw.rect(surface, BOARD_BACKGROUND_COLOR, rect, 1)
+        pg.draw.rect(surface, color, rect)
+        pg.draw.rect(surface, color, rect, 1)
 
     def update_direction(self, next_direction=None):
         """Метод обновления направления Змейки после нажатия на кнопку."""
@@ -206,11 +204,8 @@ def handle_keys(game_object):
 def main():
     """Функция запускает игру."""
     pg.init()
-
     pg.display.set_caption('Змейка')
-
     screen.fill(BOARD_BACKGROUND_COLOR)
-
     snake = Snake()
     apple = Apple(snake.positions)
     apple.draw(screen, apple.position)
@@ -220,7 +215,7 @@ def main():
         clock.tick(SPEED)
         handle_keys(snake)
         snake.move()
-        snake.draw(screen)
+        snake.draw(screen, BOARD_BACKGROUND_COLOR)
 
         if snake.get_head_position() == apple.position:
             apple.randomize_position(snake.positions)
